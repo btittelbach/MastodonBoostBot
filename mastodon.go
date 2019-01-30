@@ -13,7 +13,7 @@ import (
 /// Kudos!!
 func madonMustInitClient() (client *madon.Client, err error) {
 
-	appName := viper.GetString("AppName")
+	appName := viper.GetString("app_name")
 	instanceURL := viper.GetString("instance")
 	appKey := viper.GetString("app_key")
 	appSecret := viper.GetString("app_secret")
