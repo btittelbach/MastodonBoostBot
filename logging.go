@@ -31,7 +31,7 @@ func LogEnable(logtypes ...string) {
 		case "MAIN":
 			LogMain_ = log.New(os.Stderr, logtype+" ", log.LstdFlags)
 		case "ALL":
-			LogMadon_ = log.New(os.Stderr, logtype+" ", log.LstdFlags)
+			LogMadon_ = log.New(os.Stderr, "MADON"+" ", log.LstdFlags)
 			LogMain_ = log.New(os.Stderr, "MAIN"+" ", log.LstdFlags)
 		}
 	}

@@ -15,18 +15,18 @@ func madonMustInitClient() (client *madon.Client, err error) {
 
 	appName := viper.GetString("AppName")
 	instanceURL := viper.GetString("instance")
-	appID := viper.GetString("app_id")
+	appKey := viper.GetString("app_key")
 	appSecret := viper.GetString("app_secret")
 
 	if instanceURL == "" {
 		LogMadon_.Fatalln("madonInitClient:", "no instance provided")
 	}
 
-	LogMadon_.Println("madonInitClient:Instance: '%s'", instanceURL)
+	LogMadon_.Println("madonInitClient:Instance: ", instanceURL)
 
-	if appID != "" && appSecret != "" {
+	if appKey != "" && appSecret != "" {
 		// We already have an app key/secret pair
-		client, err = madon.RestoreApp(appName, instanceURL, appID, appSecret, nil)
+		client, err = madon.RestoreApp(appName, instanceURL, appKey, appSecret, nil)
 		if err != nil {
 			return
 		}
@@ -39,7 +39,7 @@ func madonMustInitClient() (client *madon.Client, err error) {
 		return
 	}
 
-	if appID != "" || appSecret != "" {
+	if appKey != "" || appSecret != "" {
 		LogMadon_.Fatalln("madonInitClient:", "Warning: provided app id/secrets incomplete -- registering again")
 	}
 
@@ -52,17 +52,21 @@ func madonMustInitClient() (client *madon.Client, err error) {
 func goSubscribeStreamOfTagNames(client *madon.Client, hashTagList []string, statusOutChan chan<- madon.Status) {
 	streamName := "hashtag"
 	evChan := make(chan madon.StreamEvent, 10)
-	var param string
 	stop := make(chan bool)
 	done := make(chan bool)
 	var err error
 
-	if len(hashTagList) <= 1 { // Usual case: Only 1 stream
-		err = client.StreamListener(streamName, param, evChan, stop, done)
+	nTags := len(hashTagList)
+
+	if nTags == 0 {
+		LogMadon_.Fatalln("goSubscribeStreamOfTagNames: hashTagList cannot be empty")
+	} else if nTags == 1 { // Usual case: Only 1 stream
+		LogMadon_.Println(hashTagList)
+		err = client.StreamListener(streamName, hashTagList[0], evChan, stop, done)
 	} else { // Several streams
-		n := len(hashTagList)
-		tagEvCh := make([]chan madon.StreamEvent, n)
-		tagDoneCh := make([]chan bool, n)
+
+		tagEvCh := make([]chan madon.StreamEvent, nTags)
+		tagDoneCh := make([]chan bool, nTags)
 		for i, t := range hashTagList {
 			LogMadon_.Println("goSubscribeStreamOfTagNames: Launching listener for tag '%s'", t)
 			tagEvCh[i] = make(chan madon.StreamEvent)

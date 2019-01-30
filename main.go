@@ -6,13 +6,27 @@ import (
 	"syscall"
 
 	"github.com/McKael/madon"
+	"github.com/spf13/pflag"
+	"github.com/spf13/viper"
 )
 
+var DebugFlags_ []string
+
+func init() {
+	viper.SetDefault("tag_names", []string{"r3", "realraum"})
+	pflag.StringSliceVar(&DebugFlags_, "debug", []string{}, "debug flags e.g. ALL,MADON,MAIN")
+	pflag.Parse()
+	viper.BindPFlags(pflag.CommandLine)
+	viper.SetEnvPrefix("MBB")
+	viper.AutomaticEnv()
+}
+
 func main() {
+	LogEnable(viper.GetStringSlice("debug")...)
 	status_lvl1 := make(chan madon.Status, 20)
 	status_lvl2 := make(chan madon.Status, 15)
 
-	tag_names := []string{"r3", "realraum"}
+	tag_names := viper.GetStringSlice("tag_names")
 
 	client, err := madonMustInitClient()
 	if err != nil {
