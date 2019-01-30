@@ -49,12 +49,36 @@ Alternatively, you can disable the follower-filter and just boost/reblog every p
 
 ### Deploy
 
-- deploy executable and config to server of your choice
-  e.g. when using <tt>systemd --user</tt> context copy config file to <tt>~/.config/mastodonBoostBot_config1.env</tt> and executable to <tt>~/bin/</tt> on your server
-- run it as service e.g. with provided systemd service file
-  - adapt the service file to your paths and needs
-  - if your user is allowed to linger (sudo loginctl enable-linger <username>) you can install and run the service-file without root-permissions for your user only in <tt>~/.local/share/systemd/user/</tt>
-- you can easily run multiple instances with different configurations this way
+- deploy executable and config file to server of your choice  
+- adapt the service file to your paths and needs or otherwise ensure that environment variables are loaded from config-file.
+- enable and start
+- you can easily run multiple instances with different configurations
+
+
+#### Example 1 - as user on a systemd system
+
+- copy <tt>MastodonBoostBot</tt> executable to <tt>~/bin/</tt>
+- copy config to <tt>~/.config/mastodonBoostBot_config1.env</tt>
+- <code>chmod 400 ~/.config/mastodonBoostBot_config1.env</code>
+- copy <tt>user_service/MastodonBoostBot.service</tt> to <tt>~/.local/share/systemd/user/</tt>
+- <code>systemctl --user start MastodonBoostBot.service</code>
+- <code>systemctl --user enable MastodonBoostBot.service</code>
+
+
+#### Example 2 - systemwide on a systemd system
+
+- <code>mkdir -p /opt/MastodonBoostBot/</code>
+- copy <tt>MastodonBoostBot</tt> executable to <tt>/opt/MastodonBoostBot/</tt>
+- copy config to <tt>/opt/MastodonBoostBot/mastodonBoostBot_config1.env</tt>
+- <code>chmod 400 /opt/MastodonBoostBot/mastodonBoostBot_config1.env</code>
+- copy <tt>user_service/MastodonBoostBot.service</tt> to <tt>/etc/systemd/system</tt>
+- adapt paths and config in <tt>MastodonBoostBot.service</tt>
+    - <tt>ExecStart</tt>
+    - <tt>EnvironmentFile</tt>
+    - change <tt>WantedBy</tt> to <tt>multi-user.target</tt> or whatever you start your services with
+    - comment in additional protections. possibly try chrooting the service in <tt>/opt/MastodonBoostBot</tt>
+- <code>systemctl start MastodonBoostBot.service</code>
+- <code>systemctl enable MastodonBoostBot.service</code>
 
 
 ## Design
