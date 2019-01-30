@@ -4,6 +4,10 @@
 
 The original usecase is to collect all the toots mentioning one of a set of hashtags by a group of people and re-toot/boost their stati in a single account. The single account can be displayed on a kiosk screen and be the public face of a organisation/group/hackerspace. You can use MastodonBoostBot to emulate groups in Mastodon. Users can post as an organisation account without requiring login credentials and without loosing the information about the original poster.
 
+Administer your group (people whose tagged posts will be boosted) in Mastodon by following/unfollowing users.
+
+Alternatively, you can disable the follower-filter and just boost/reblog every post containing one of your hashtags.
+
 ### Features
 
 - mostly 12-factor app
@@ -11,7 +15,7 @@ The original usecase is to collect all the toots mentioning one of a set of hash
     - but no package control until go1.12 is more widespread
 - easily containerized static golang executable
 - fail-fast, restart-fast
-- start once, never change configuration again (administrate trusted followers in mastodon, not bot configuration)
+- configure once and forget (administrate trusted followers in mastodon, not bot configuration)
 
 ### similar software
 
