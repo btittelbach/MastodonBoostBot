@@ -1,4 +1,4 @@
-// (c) Bernhard Tittelbach, 2019
+/// (c) Bernhard Tittelbach, 2019 - MIT License
 
 package main
 

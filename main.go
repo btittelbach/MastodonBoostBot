@@ -1,3 +1,5 @@
+/// (c) Bernhard Tittelbach, 2019 - MIT License
+
 package main
 
 import (
