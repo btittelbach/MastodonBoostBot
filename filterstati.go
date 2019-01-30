@@ -13,6 +13,7 @@ type StatusFilterConfig struct {
 
 func goFilterStati(client *madon.Client, statusIn <-chan madon.Status, statusOut chan<- madon.Status, config StatusFilterConfig) {
 	defer close(statusOut)
+	already_seen_map := make(map[int64]bool, 20)
 FILTERFOR:
 	for status := range statusIn {
 		passes_visibility_check := false
@@ -31,6 +32,11 @@ FILTERFOR:
 		}
 
 		if !passes_visibility_check {
+			continue FILTERFOR
+		}
+
+		if _, inmap := already_seen_map[status.ID]; inmap {
+			//already boosted this status "today", probably used more than one of our hashtags
 			continue FILTERFOR
 		}
 
@@ -60,6 +66,7 @@ FILTERFOR:
 			}
 		}
 
+		already_seen_map[status.ID] = true
 		statusOut <- status
 	}
 }
