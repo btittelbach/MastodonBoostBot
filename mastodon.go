@@ -17,6 +17,8 @@ func madonMustInitClient() (client *madon.Client, err error) {
 	instanceURL := viper.GetString("instance")
 	appKey := viper.GetString("app_key")
 	appSecret := viper.GetString("app_secret")
+	appToken := viper.GetString("app_token")
+	appScopes := viper.GetStringSlice("app_scopes")
 
 	if instanceURL == "" {
 		LogMadon_.Fatalln("madonInitClient:", "no instance provided")
@@ -27,6 +29,7 @@ func madonMustInitClient() (client *madon.Client, err error) {
 	if appKey != "" && appSecret != "" {
 		// We already have an app key/secret pair
 		client, err = madon.RestoreApp(appName, instanceURL, appKey, appSecret, nil)
+		client.SetUserToken(appToken, "", "", appScopes)
 		if err != nil {
 			return
 		}
@@ -144,7 +147,7 @@ func getRelation(client *madon.Client, accID int64) (madon.Relationship, error) 
 		return madon.Relationship{}, err
 	}
 	if len(relationshiplist) == 0 {
-		return madon.Relationship{}, fmt.Errorf("Unknown error, empty list")
+		return madon.Relationship{}, fmt.Errorf("AccountID not known, got empty result")
 	}
 	return relationshiplist[0], nil
 }

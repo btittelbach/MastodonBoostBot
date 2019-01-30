@@ -49,10 +49,11 @@ FILTERFOR:
 
 		if config.must_be_followed_by_us {
 			passes_follow_check := false
-			if relationship, relerr := getRelation(client, status.ID); relerr == nil {
+			if relationship, relerr := getRelation(client, status.Account.ID); relerr == nil {
 				passes_follow_check = relationship.Following && !relationship.Blocking
 			} else {
-				LogMadon_.Fatalln("goFilterStati::FollowCheck: ", relerr)
+				LogMadon_.Printf("goFilterStati::FollowCheck: ", relerr)
+				passes_follow_check = false
 			}
 			if !passes_follow_check {
 				continue FILTERFOR

@@ -45,8 +45,8 @@ func main() {
 		os.Exit(0)
 	}()
 
-	//goBoostStati(client, status_lvl2)
-	goPrintStati(status_lvl2)
+	goBoostStati(client, status_lvl2)
+	// goPrintStati(status_lvl2)
 
 	LogMain_.Print("Exiting..")
 }
