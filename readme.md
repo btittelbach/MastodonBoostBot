@@ -68,11 +68,14 @@ Alternatively, you can disable the follower-filter and just boost/reblog every p
 #### Example 2 - systemwide on a systemd system
 
 - <code>mkdir -p /opt/MastodonBoostBot/</code>
+- <code>adduser mastodonbot</code>
+- <code>chown mastodonbot -R /opt/MastodonBoostBot/</code>
 - copy <tt>MastodonBoostBot</tt> executable to <tt>/opt/MastodonBoostBot/</tt>
 - copy config to <tt>/opt/MastodonBoostBot/mastodonBoostBot_config1.env</tt>
 - <code>chmod 400 /opt/MastodonBoostBot/mastodonBoostBot_config1.env</code>
 - copy <tt>user_service/MastodonBoostBot.service</tt> to <tt>/etc/systemd/system</tt>
 - adapt paths and config in <tt>MastodonBoostBot.service</tt>
+    - add <tt>User=mastodonbot</tt>
     - <tt>ExecStart</tt>
     - <tt>EnvironmentFile</tt>
     - change <tt>WantedBy</tt> to <tt>multi-user.target</tt> or whatever you start your services with
