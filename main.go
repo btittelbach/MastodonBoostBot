@@ -21,6 +21,10 @@ func init() {
 	viper.BindPFlags(pflag.CommandLine)
 	viper.SetEnvPrefix("MBB")
 	viper.AutomaticEnv()
+	viper.SetDefault("filterout_sensitive", false)
+	viper.SetDefault("filterout_reboosts", true)
+	viper.SetDefault("filterfor_accounts_we_follow", true)
+
 }
 
 func main() {
@@ -36,7 +40,7 @@ func main() {
 	}
 
 	go goSubscribeStreamOfTagNames(client, tag_names, status_lvl1)
-	go goFilterStati(client, status_lvl1, status_lvl2, StatusFilterConfig{must_have_visiblity: []string{"public"}, must_have_one_of_tag_names: tag_names, must_be_unmuted: true, must_be_original: true, must_be_followed_by_us: true, must_not_be_sensitive: false})
+	go goFilterStati(client, status_lvl1, status_lvl2, StatusFilterConfig{must_have_visiblity: []string{"public"}, must_have_one_of_tag_names: tag_names, must_be_unmuted: true, must_be_original: viper.GetBool("filterout_reboosts"), must_be_followed_by_us: viper.GetBool("filterfor_accounts_we_follow"), must_not_be_sensitive: viper.GetBool("filterout_sensitive")})
 
 	// wait on Ctrl-C or sigInt or sigKill
 	go func() {
