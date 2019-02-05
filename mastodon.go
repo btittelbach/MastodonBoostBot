@@ -4,8 +4,11 @@ package main
 import (
 	"fmt"
 	"io"
+	"net/http"
 	"os"
+	"strings"
 
+	"github.com/ChimeraCoder/anaconda"
 	"github.com/McKael/madon"
 	"github.com/spf13/viper"
 )
@@ -160,8 +163,39 @@ func goBoostStati(client *madon.Client, stati_chan <-chan madon.Status) {
 	}
 }
 
+func goTweetStati(client *madon.Client, birdclient *anaconda.TwitterApi, stati_chan <-chan madon.Status) {
+	for status := range stati_chan {
+		LogMadon_.Printf("Tweeting Status with ID %d published by %s\n", status.ID, status.Account.Username)
+		text := status.Content
+		twitter_media_ids := make([]string, 4)
+		for _, media := range status.MediaAttachments {
+			if strings.Contains(media.Type, "image") {
+				resp, err := http.Get(media.URL)
+				if err != nil {
+					LogMadon_.Println("Error getting MediaAttachment:", err)
+					continue
+				}
+				if twitter_media_id, err := getImageForTweet(birdclient, resp.Body); err == nil { //respBody: io.ReaderCloser
+					twitter_media_ids = append(twitter_media_ids, twitter_media_id)
+				}
+			} else {
+				LogMadon_.Printf("Skipping download if media type %s", media.Type)
+			}
+		}
+		sendTweet(birdclient, text, twitter_media_ids)
+	}
+}
+
 func goPrintStati(stati_chan <-chan madon.Status) {
 	for status := range stati_chan {
 		fmt.Printf("%+v\n", status)
 	}
+}
+
+func readMastodonAttachment(url string) (io.Reader, error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Body, nil
 }
