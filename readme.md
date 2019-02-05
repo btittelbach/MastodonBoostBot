@@ -44,7 +44,7 @@ Alternatively, you can disable the follower-filter and just boost/reblog every p
 
 ### Test locally
 
-    source <(sed -E -n 's/[^#]+/export &/ p' mastodonBoostBot_config1.env)
+    source <(sed '/^\s*#/d;s/\(.\+\)=\(.*\)/export \1="\2"/;' mastodonBoostBot_config1.env)
     ./MastodonBoostBot --debug=ALL
 
 ### Deploy
