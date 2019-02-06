@@ -34,7 +34,7 @@ func sendTweet(client *anaconda.TwitterApi, post string, media_ids []string) err
 	for _, mid := range media_ids {
 		v.Add("media_ids", mid)
 	}
-	// log.Println("sendTweet", post, v)
+	LogMadon_.Println("sendTweet", post, v)
 	_, err = client.PostTweet(post, v)
 	return err
 }
@@ -45,8 +45,10 @@ func getImageForTweet(client *anaconda.TwitterApi, imagebuffer io.Reader) (strin
 	io.Copy(b64encoder, imagebuffer)
 	tmedia, err := client.UploadMedia(b64buf.String())
 	if err == nil {
+		LogMadon_.Println("getImageForTweet OK:", tmedia.MediaID)
 		return strconv.FormatInt(tmedia.MediaID, 10), err
 	} else {
+		LogMadon_.Println("getImageForTweet ERROR:", err)
 		return "", err
 	}
 }
