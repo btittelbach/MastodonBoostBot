@@ -1,10 +1,14 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
+	"fmt"
 	"io"
 	"net/url"
+	"os"
 	"strconv"
+	"strings"
 
 	"encoding/base64"
 
@@ -51,4 +55,32 @@ func getImageForTweet(client *anaconda.TwitterApi, imagebuffer io.Reader) (strin
 		LogMadon_.Println("getImageForTweet ERROR:", err)
 		return "", err
 	}
+}
+
+func oauthAppWithTwitterForUser(consumerkey, consumersecret string) {
+	if !viper.IsSet("cctweet_consumer_secret") || !viper.IsSet("cctweet_consumer_key") {
+		panic("consumer keys not set")
+	}
+	anaconda.SetConsumerKey(consumerkey)
+	anaconda.SetConsumerSecret(consumersecret)
+	tapi := anaconda.NewTwitterApi("", "")
+	url_for_user, temp_credentials, err := tapi.AuthorizationURL("oob")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("Please authorize this App here: ", url_for_user)
+	fmt.Println("Afterwards you will be shown a PIN number.")
+	fmt.Println("Enter that PIN here and press Enter to continue: ")
+	reader := bufio.NewReader(os.Stdin)
+	userpin, _ := reader.ReadString('\n')
+	userpin = strings.TrimSpace(userpin)
+	tw_credentials, _, err := tapi.GetCredentials(temp_credentials, userpin)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("\n\nPut these into your environment / configuration:\n")
+	fmt.Printf("MBB_CCTWEET_CONSUMER_KEY=%s\n", consumerkey)
+	fmt.Printf("MBB_CCTWEET_CONSUMER_SECRET=%s\n", consumersecret)
+	fmt.Printf("MBB_CCTWEET_ACCESS_TOKEN=%s\n", tw_credentials.Token)
+	fmt.Printf("MBB_CCTWEET_ACCESS_SECRET=%s\n", tw_credentials.Secret)
 }

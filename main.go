@@ -13,10 +13,12 @@ import (
 )
 
 var DebugFlags_ []string
+var RegisterAppForTwitterUser_ bool
 
 func init() {
 	viper.SetDefault("tag_names", []string{"r3", "realraum"})
 	pflag.StringSliceVar(&DebugFlags_, "debug", []string{}, "debug flags e.g. ALL,MADON,MAIN")
+	pflag.BoolVar(&RegisterAppForTwitterUser_, "starttwitteroauth", false, "oauth register this app with your twitter user")
 	pflag.Parse()
 	viper.BindPFlags(pflag.CommandLine)
 	viper.SetEnvPrefix("MBB")
@@ -35,6 +37,12 @@ func goSplitChannel(in <-chan madon.Status, out1, out2 chan<- madon.Status) {
 
 func main() {
 	LogEnable(viper.GetStringSlice("debug")...)
+
+	if RegisterAppForTwitterUser_ {
+		oauthAppWithTwitterForUser(viper.GetString("cctweet_consumer_key"), viper.GetString("cctweet_consumer_secret"))
+		os.Exit(0)
+	}
+
 	status_lvl1 := make(chan madon.Status, 20)
 	status_lvl2 := make(chan madon.Status, 15)
 
