@@ -31,16 +31,25 @@ Alternatively, you can disable the follower-filter and just boost/reblog every p
 
 ### Build
 
-    go get .
     go build
 
 ### Configure
 
-- In your Mastodon account-page, create a new application in the development app
-    - with the following permissions: <tt>read:accounts</tt> <tt>read:statuses</tt> <tt>read:search</tt> <tt>read:follows</tt> <tt>write:conversations</tt> <tt>write:statuses</tt> <tt>push</tt>
-- copy <tt>example.env</tt> and fill the copy with the appropriately app-credentials
-  e.g. to <tt>mastodonBoostBot_config1.env</tt>
-- configure the hashtags you want to follow (without the leading <tt>#</tt>)
+1. In your Mastodon account-page, create a new application in the development app
+    - with the following permissions: ```read:accounts``` ```read:statuses``` ```read:search``` ```read:follows``` ```write:conversations``` ```write:statuses``` ```push```
+2. copy ```example.env``` and fill the copy with the appropriately app-credentials
+  e.g. to ```mastodonBoostBot_config1.env```
+3. configure the hashtags you want to follow (without the leading ```#```)
+
+### Carbon Copy to Twitter
+
+1. You will need an App Consumer Key and App Consumer Secret from a Twitter Developer (or get a Twitter Developer to run MastodonBoostBot for you)
+2. run
+ ```MBB_CCTWEET_CONSUMER_KEY=___ MBB_CCTWEET_CONSUMER_SECRET=___ ./MastodonBoostBot --starttwitteroauth``` after replacing ```___```
+ with your key and secret.
+3. authorize or let authorize the twitter account you want to use
+4. enter the PIN on the cmdline
+5. copy&paste the resulting settings into your environment file for the service
 
 ### Test locally
 
@@ -49,39 +58,39 @@ Alternatively, you can disable the follower-filter and just boost/reblog every p
 
 ### Deploy
 
-- deploy executable and config file to server of your choice  
-- adapt the service file to your paths and needs or otherwise ensure that environment variables are loaded from config-file.
-- enable and start
-- you can easily run multiple instances with different configurations
+1. deploy executable and config file to server of your choice
+2. adapt the service file to your paths and needs or otherwise ensure that environment variables are loaded from config-file.
+3. enable and start
+   you can easily run multiple instances with different configurations
 
 
 #### Example 1 - as user on a systemd system
 
-- copy <tt>MastodonBoostBot</tt> executable to <tt>~/bin/</tt>
-- copy config to <tt>~/.config/mastodonBoostBot_config1.env</tt>
-- <code>chmod 400 ~/.config/mastodonBoostBot_config1.env</code>
-- copy <tt>user_service/MastodonBoostBot.service</tt> to <tt>~/.local/share/systemd/user/</tt>
-- <code>systemctl --user start MastodonBoostBot.service</code>
-- <code>systemctl --user enable MastodonBoostBot.service</code>
+1. copy <tt>MastodonBoostBot</tt> executable to <code>~/bin/</code>
+1. copy config to <code>~/.config/mastodonBoostBot_config1.env</code>
+1. <code>chmod 400 ~/.config/mastodonBoostBot_config1.env</code>
+1. copy <code>user_service/MastodonBoostBot.service</code> to <code>~/.local/share/systemd/user/</code>
+1. <code>systemctl --user start MastodonBoostBot.service</code>
+1. <code>systemctl --user enable MastodonBoostBot.service</code>
 
 
 #### Example 2 - systemwide on a systemd system
 
-- <code>mkdir -p /opt/MastodonBoostBot/</code>
-- <code>adduser mastodonbot</code>
-- <code>chown mastodonbot -R /opt/MastodonBoostBot/</code>
-- copy <tt>MastodonBoostBot</tt> executable to <tt>/opt/MastodonBoostBot/</tt>
-- copy config to <tt>/opt/MastodonBoostBot/mastodonBoostBot_config1.env</tt>
-- <code>chmod 400 /opt/MastodonBoostBot/mastodonBoostBot_config1.env</code>
-- copy <tt>user_service/MastodonBoostBot.service</tt> to <tt>/etc/systemd/system</tt>
-- adapt paths and config in <tt>MastodonBoostBot.service</tt>
-    - add <tt>User=mastodonbot</tt>
-    - <tt>ExecStart</tt>
-    - <tt>EnvironmentFile</tt>
-    - change <tt>WantedBy</tt> to <tt>multi-user.target</tt> or whatever you start your services with
-    - comment in additional protections. possibly try chrooting the service in <tt>/opt/MastodonBoostBot</tt>
-- <code>systemctl start MastodonBoostBot.service</code>
-- <code>systemctl enable MastodonBoostBot.service</code>
+1. <code>mkdir -p /opt/MastodonBoostBot/</code>
+1. <code>adduser mastodonbot</code>
+1. <code>chown mastodonbot -R /opt/MastodonBoostBot/</code>
+1. copy <tt>MastodonBoostBot</tt> executable to <code>/opt/MastodonBoostBot/</code>
+1. copy config to <code>/opt/MastodonBoostBot/mastodonBoostBot_config1.env</code>
+1. <code>chmod 400 /opt/MastodonBoostBot/mastodonBoostBot_config1.env</code>
+1. copy <code>user_service/MastodonBoostBot.service</code> to <code>/etc/systemd/system</code>
+1. adapt paths and config in <tt>MastodonBoostBot.service</tt>
+    a. add <code>User=mastodonbot</code>
+    a. <code>ExecStart</code>
+    a. <code>EnvironmentFile</code>
+    a. change <code>WantedBy</code> to <code>multi-user.target</code> or whatever you start your services with
+    a. comment in additional protections. possibly try chrooting the service in <code>/opt/MastodonBoostBot</code>
+1. <code>systemctl start MastodonBoostBot.service</code>
+1. <code>systemctl enable MastodonBoostBot.service</code>
 
 
 ## Design
