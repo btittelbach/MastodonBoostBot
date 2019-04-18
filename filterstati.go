@@ -59,7 +59,7 @@ FILTERFOR:
 			if relationship, relerr := getRelation(client, status.Account.ID); relerr == nil {
 				passes_follow_check = relationship.Following && !relationship.Blocking
 			} else {
-				LogMadon_.Printf("goFilterStati::FollowCheck: ", relerr)
+				LogMadon_.Println("goFilterStati::FollowCheck:", relerr)
 				passes_follow_check = false
 			}
 			if !passes_follow_check {

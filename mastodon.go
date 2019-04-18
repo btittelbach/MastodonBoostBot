@@ -76,7 +76,7 @@ func goSubscribeStreamOfTagNames(client *madon.Client, hashTagList []string, sta
 		tagEvCh := make([]chan madon.StreamEvent, nTags)
 		tagDoneCh := make([]chan bool, nTags)
 		for i, t := range hashTagList {
-			LogMadon_.Println("goSubscribeStreamOfTagNames: Launching listener for tag '%s'", t)
+			LogMadon_.Printf("goSubscribeStreamOfTagNames: Launching listener for tag '%s'\n", t)
 			tagEvCh[i] = make(chan madon.StreamEvent)
 			tagDoneCh[i] = make(chan bool)
 			e := client.StreamListener(streamName, t, tagEvCh[i], stop, tagDoneCh[i])
@@ -123,17 +123,17 @@ LISTENSTREAM:
 						LogMadon_.Println("goSubscribeStreamOfTagNames:", "The stream connection was unexpectedly closed")
 						continue
 					}
-					LogMadon_.Println("goSubscribeStreamOfTagNames:", "Error event: [%s] %s", ev.Event, ev.Error)
+					LogMadon_.Printf("goSubscribeStreamOfTagNames: Error event: [%s] %s\n", ev.Event, ev.Error)
 					continue
 				}
-				LogMadon_.Println("goSubscribeStreamOfTagNames:", "Event: [%s]", ev.Event)
+				LogMadon_.Printf("goSubscribeStreamOfTagNames: Event: [%s]\n", ev.Event)
 			case "update":
 				s := ev.Data.(madon.Status)
 				statusOutChan <- s
 			case "notification", "delete":
 				continue
 			default:
-				LogMadon_.Println("goSubscribeStreamOfTagNames:", "Unhandled event: [%s] %T", ev.Event, ev.Data)
+				LogMadon_.Printf("goSubscribeStreamOfTagNames: Unhandled event: [%s] %T\n", ev.Event, ev.Data)
 			}
 		}
 	}
@@ -141,7 +141,7 @@ LISTENSTREAM:
 	close(evChan)
 	close(statusOutChan)
 	if err != nil {
-		LogMadon_.Println("goSubscribeStreamOfTagNames: Error: %s", err.Error())
+		LogMadon_.Printf("goSubscribeStreamOfTagNames: Error: %s\n", err.Error())
 		os.Exit(1)
 	}
 }
