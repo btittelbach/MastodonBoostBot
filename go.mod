@@ -1,5 +1,7 @@
 module github.com/btittelbach/MastodonBoostBot
 
+go 1.12
+
 require (
 	github.com/BurntSushi/toml v0.3.1 // indirect
 	github.com/ChimeraCoder/anaconda v2.0.0+incompatible
@@ -14,7 +16,6 @@ require (
 	github.com/pkg/errors v0.8.1 // indirect
 	github.com/sendgrid/rest v2.4.1+incompatible // indirect
 	github.com/spf13/pflag v1.0.3
-	github.com/spf13/viper v1.3.1
-	golang.org/x/net v0.0.0-20190125091013-d26f9f9a57f3 // indirect
-	golang.org/x/oauth2 v0.0.0-20190130055435-99b60b757ec1 // indirect
+	github.com/spf13/viper v1.3.2
+	golang.org/x/oauth2 v0.0.0-20190402181905-9f3314589c9a // indirect
 )
