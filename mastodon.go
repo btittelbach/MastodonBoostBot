@@ -3,9 +3,11 @@ package main
 
 import (
 	"fmt"
+	"html"
 	"io"
 	"net/http"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/ChimeraCoder/anaconda"
@@ -165,10 +167,12 @@ func goBoostStati(client *madon.Client, stati_chan <-chan madon.Status) {
 }
 
 func goTweetStati(client *madon.Client, birdclient *anaconda.TwitterApi, stati_chan <-chan madon.Status) {
-	tagstripper := bluemonday.StrictPolicy()
+	tagstripper := bluemonday.NewPolicy()
+	tagstripper.AllowElements("br")
+	re_br2newline := regexp.MustCompile("<br[^/>]*/?>")
 	for status := range stati_chan {
 		LogMadon_.Printf("Tweeting Status with ID %d published by %s\n", status.ID, status.Account.Username)
-		text := tagstripper.Sanitize(status.Content)
+		text := strings.TrimSpace(html.UnescapeString(re_br2newline.ReplaceAllString(tagstripper.Sanitize(status.Content), "\n")))
 		twitter_media_ids := make([]string, 0, 4)
 		for _, media := range status.MediaAttachments {
 			if strings.Contains(media.Type, "image") {
