@@ -17,6 +17,12 @@ Alternatively, you can disable the follower-filter and just boost/reblog every p
 - fail-fast, restart-fast
 - configure once and forget (administrate trusted followers in mastodon, not bot configuration)
 
+### Example Information Flow
+
+<img src="https://raw.githubusercontent.com/btittelbach/lightningtalks_mycete-mastodonboostbot-matrix/master/images/MastodonBoostBot_flow.png" style="text-align:center; width:100%;">
+
+see also slides of lightningtalks which can be found [here](https://github.com/btittelbach/lightningtalks_mycete-mastodonboostbot-matrix)
+
 ### similar software
 
 - [tootgroup](https://github.com/oe4dns/tootgroup.py)
