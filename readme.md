@@ -17,6 +17,12 @@ Alternatively, you can disable the follower-filter and just boost/reblog every p
 - fail-fast, restart-fast
 - configure once and forget (administrate trusted followers in mastodon, not bot configuration)
 
+#### Todo
+
+- cc videos to Twitter
+- cc multiple images to Twitter
+- split longer toots into multiple tweets
+
 ### Example Information Flow
 
 <img src="https://raw.githubusercontent.com/btittelbach/lightningtalks_mycete-mastodonboostbot-matrix/master/images/MastodonBoostBot_flow.png" style="text-align:center; width:100%;">
